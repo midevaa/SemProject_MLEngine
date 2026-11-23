@@ -1,10 +1,69 @@
-# Local tool and editor settings
-.claude/
-.idea/
 
-# Data, training outputs and caches (kept outside the repository)
+# ==============================
+# Android Studio / Kotlin
+# ==============================
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Gradle
+.gradle/
+**/build/
+
+# Android SDK configuration
+**/local.properties
+
+# Android build outputs
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# Native build outputs
+.cxx/
+.externalNativeBuild/
+
+# Kotlin / Java generated files
+*.class
+
+# ==============================
+# Python / AI development
+# ==============================
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
+env/
+
+# ==============================
+# Secrets and local configuration
+# ==============================
+.env
+.env.*
+!.env.example
+secrets.properties
+
+# ==============================
+# Operating system
+# ==============================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ==============================
+# Private PlantID specification
+# ==============================
+Mobile-App/PLANTID_MOBILE_APP_SPEC.md
+PLANTID_MOBILE_APP_SPEC.md
+
+# ==============================
+# Local tool settings and ML training data/outputs
+# (from the ML engine repository)
+# ==============================
+.claude/
+CLAUDE.md
 outputs/
 plantid_v1/
 *.zip
-__pycache__/
-.ipynb_checkpoints/

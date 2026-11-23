@@ -8,6 +8,7 @@ The machine-learning engine of **PlantID**, a mobile app that identifies plants 
 | `Model_Final.ipynb` | **Final model** (Project Deliverable 3): one notebook with every step, from data collection and cleaning to training, evaluation, explainability, TensorFlow Lite export and a demo. Saved with the outputs of the final training run |
 | `FloraDB_Exploration.ipynb`, `care_tips.json`, `species_map.json` | FloraDB exploration and the base model's care data (7 species) |
 | `model/` | Files the Android app needs: `plantid_v1.tflite`, `labels.txt`, `classes.json`, `model_metadata.json`, and `care_tips.json` (care and pet safety for all 30 species, keyed by the labels in `labels.txt`) |
+| `Mobile-App/` | PlantID Android app (Kotlin, Jetpack Compose). See [`Mobile-App/README.md`](Mobile-App/README.md) |
 
 ## Final model in short
 
@@ -51,6 +52,12 @@ humidity, and whether it is toxic to dogs and cats with symptoms. `other_plant` 
 * Pet toxicity comes from the ASPCA. Where the ASPCA has no listing, a university extension source is used and the
   plant is marked toxic if that source lists any poison risk (`toxicity_status: "extension_listed"`).
   Toxicity information is not veterinary advice.
+
+## Android app
+
+The app is in [`Mobile-App/`](Mobile-App/README.md). Open that folder, not the
+repository root, in Android Studio. Its README covers setup, build, tests and
+how the app uses the files in `model/`.
 
 ## For team members: running the notebook again
 

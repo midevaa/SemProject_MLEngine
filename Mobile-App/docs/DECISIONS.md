@@ -1,0 +1,77 @@
+# PlantID Android — Decision Log
+
+Record a decision here when the team agrees on it. Don't delete old entries.
+If a decision changes, mark the old one *superseded* and add a new entry.
+
+## Decided
+
+| # | Date | Decision | Rationale |
+|---|---|---|---|
+| D1 | 2026-11-18 | **UI toolkit:** Jetpack Compose + Material 3 only (no XML layouts) | Project was generated with Compose; one coherent UI approach |
+| D2 | 2026-11-18 | **Application ID / package:** `io.github.ephym6.plantid` | Replaces the `com.example` placeholder; namespace the team controls |
+| D3 | 2026-11-18 | **minSdk 26** (Android 8.0) | `java.time` without desugaring; still broad device coverage |
+| D4 | 2026-11-18 | **Git flow:** feature branch per task, reviewed, merged locally into `main`; push only on request | Keeps `main` buildable; matches team review workflow |
+| D5 | 2026-11-18 | **Architecture (proposed, applied from Sprint 1):** single Activity, MVVM + unidirectional data flow (`ViewModel` → `StateFlow<UiState>`), Navigation Compose with type-safe routes, manual DI container (no Hilt) | Small app; fewer dependencies; easy for the team to explain |
+| D6 | 2026-11-18 | **AI boundary:** UI depends only on an `IdentificationService` interface with outcomes `Identified` / `Uncertain` / `Unsupported` / `Failed`. Mock implementation first; real on-device model only in Sprint 7 | UI-first strategy; model can be swapped without UI rewrite |
+| D7 | 2026-11-18 | **Image input:** Android Photo Picker + system camera (`TakePicture` via `FileProvider`) | No storage permission and no CAMERA permission required |
+| D8 | 2026-11-19 | **Theme (was Q8):** light + dark following the system setting; Material You dynamic colour disabled. Green primary, amber extra *warning* role, serif (system) headlines | Consistent botanical brand on every device; cautionary states don't reuse error red |
+| D9 | 2026-11-19 | **Icons:** Material Symbols Rounded, imported as vector drawables (`res/drawable/ic_*.xml`, Apache 2.0) rather than an icon library | No dependency; one consistent style. Add new icons the same way |
+| D10 | 2026-11-19 | **Navigation behaviour:** bottom bar for Home / History / About; switching tabs keeps Home at the bottom of the back stack, so Back returns to Home, then exits. Identification flow screens (Sprint 2+) hide the bar | Predictable Back; matches Android guidance |
+| D11 | 2026-11-19 | **About privacy text** describes only what the current build does. It must be updated in the same change that adds photo handling (Sprint 2) or storage (Sprint 5) | Spec: privacy wording must match the implementation |
+| D12 | 2026-11-19 | **Selected photo handling:** a picked or captured photo is copied into `cacheDir/selected_photos/` and its image header checked before preview. Only the newest photo is kept. The camera writes through a non-exported FileProvider. No runtime permissions (no CAMERA, no storage) | Unreadable or unsupported files are caught early; preview survives process death; data minimisation. Long-term retention for history is still open (Q6) |
+| D13 | 2026-11-19 | **Coil pinned to 3.3.0** | Coil 3.5+ requires Kotlin 2.4; the project compiler is Kotlin 2.2.10 (AGP 9 built-in Kotlin + Compose plugin). Revisit when the team upgrades Kotlin |
+| D14 | 2026-11-19 | **Photo selection is one app-level flow:** an activity-scoped `PhotoSelectionViewModel` + `PhotoSelectionHost` serve Home, History and Preview ("Choose another photo" replaces the preview; cancelling keeps the current one) | One implementation of launchers, errors and process-death handling |
+| D15 | 2026-11-19 | **Demo data is fictional** ("Demo Plant A", "Demo species (fictional)"): the mock returns no real species, no scores and no plant facts. Replaced by curated records once Q1/Q4 are decided | A mock result can't be mistaken for a real prediction (spec §7.4) |
+| D16 | 2026-11-19 | **Demo mode picker (was Q10):** shown on the photo preview whenever the mock identifier is in use (every build until Sprint 7); it disappears automatically with a real identifier. Every demo result shows a "Demo result" banner | Deterministic testing; mock output always labelled |
+| D17 | 2026-11-19 | **Result presentation:** no confidence numbers are shown (Q2 open). *Uncertain* never shows a species name; *Unsupported* shows no plant; *Failed* offers Try again (or Try another photo if the photo is gone). Care guide and Save buttons appear only when they work (Sprints 4–5) | Honest results; no buttons that do nothing |
+| D18 | 2026-11-19 | **Identification timeout 30 s (provisional)**, and any exception becomes *Failed*, never a fake success. Set the real value from measured on-device inference time in Sprint 7 | Avoids an endless loading state without inventing performance targets |
+| D19 | 2026-11-19 | *Superseded by D36.* **Supported plants (was Q1):** the 7 classes in `species_map.json`. The team will say if more are added | Fixes app scope and model labels |
+| D20 | 2026-11-19 | *Toxicity part superseded by D41.* **Care tips (was Q4): rule-based, from the dataset.** `CareRecommendations` turns each plant's source values (light lux range, typical watering interval, temperature range, humidity) into tips; wording comes from reviewed string templates; implausible values are dropped; nothing is added that isn't in the source. **No generative AI at runtime** (would need internet/cloud, can't be traced to a source, conflicts with the on-device scope). Toxicity is not shown. Possible later upgrade: AI-drafted text written offline, reviewed by the research lead, then bundled | Every tip traceable to source data; offline; testable; honest |
+| D21 | 2026-11-19 | *Superseded by D40.* **Care data location (was Q5):** `app/src/main/assets/plants.json`, generated by `Mobile-App/tools/sync_plant_data.py` from the root `species_map.json` + `care_tips.json` (read only). Keyed by classifier class label. `PlantDataSyncTest` fails if the asset drifts from the root files | Android project builds on its own; AI team's files stay the single source; drift caught by tests |
+| D22 | 2026-11-19 | **Demo data update (supersedes D15 in part):** the mock's *Identified*/*Slow* outcomes now return Golden Pothos from the catalog so the care guide can be shown; still labelled *Demo result* and the photo is not analysed. *Missing details* stays fictional (Demo Plant B, no care guide) | Demonstrates the care guide with real, sourced content |
+| D23 | 2026-11-19 | **Care data licence:** FloraDB houseplant care sample is **CC BY-NC 4.0** (checked on the dataset card 2026-11-19): attribution required, non-commercial use only. Credited on every care guide and in About | Licence compliance |
+| D24 | 2026-11-19 | **History photos (was Q6):** only when a result is *saved*, a downscaled JPEG copy (longest side ≤ 1024 px, quality 85) goes to `filesDir/history_photos/`. Re-encoding strips EXIF, including GPS location. Deleted with its record; Clear all deletes all. A missing photo shows a placeholder. Unsaved photos stay temporary (D12) | Data minimisation; enough to recognise the plant later; history works without the photo |
+| D25 | 2026-11-19 | **No backups:** `allowBackup=false` plus explicit exclusion rules for cloud backup and device transfer | Otherwise Android Auto Backup would upload saved photos to Google Drive, contradicting "nothing is uploaded" |
+| D26 | 2026-11-19 | **History scope (was Q7):** save (identified, uncertain, unsupported; never failures), single delete and Clear all, both with confirmation; Home shows the 3 most recent | Team chose both delete options |
+| D27 | 2026-11-19 | **History records are snapshots** (names, status, model info incl. demo flag, time) keyed by an event id, so saving is idempotent and old records don't change when plant data does. The care guide link uses `plantId` and shows the current curated content | Spec §6.9 |
+| D28 | 2026-11-19 | **Room 2.8.5 + KSP 2.3.14.** KSP 2.2.10-2.0.2 fails with AGP 9 built-in Kotlin; 2.3.x supports it. Schemas exported to `app/schemas/`: a schema change needs a version bump and a migration | Standard local database; migrations reviewable |
+| D29 | 2026-11-19 | **Roadmap:** finish and stabilise the interface (Sprint 6) with the demo identifier, then replace the demo with the trained model (Sprint 7). More species will be trained later: adding one needs the AI team's JSON updated and `sync_plant_data.py` rerun. No app code changes, because results map through the class label | Team plan |
+| D30 | 2026-11-20 | **Navigation actions run only while their screen is RESUMED** (`ifResumed` in `PlantIdNavHost`) | A tap during a transition can't pop or navigate twice (TEST_REPORT F1) |
+| D31 | 2026-11-20 | **Finished identification results survive process death** (outcome + event id + time in `SavedStateHandle`; outcome types `@Serializable`) | Same result after returning; saving stays idempotent (F2) |
+| D32 | 2026-11-20 | **Accessibility automation:** WCAG contrast unit test on theme tokens + a semantics checker (labels, ≥ 48 dp touch targets) in the layout stress test, instead of the ATF artifact (classpath conflict with Espresso). Manual TalkBack pass stays required | Automated regression checks without new app dependencies |
+| D33 | 2026-11-20 | **AI integration boundary documented** in `docs/AI_INTEGRATION.md` and guarded by `ArchitectureTest` (only `di/` may reference concrete implementations) | Sprint 7 swap stays confined to one new package + `AppContainer` |
+| D34 | 2026-11-23 | **Model brought in by merging the ML engine repository** (`midevaa/SemProject_MLEngine`) into this one, keeping the ML team's original commits and authors; `README.md` and `.gitignore` combined | Honest history; one repository for the project |
+| D35 | 2026-11-23 | **The app packages the root `model/` folder directly as assets** (no copy in `Mobile-App/`); `.tflite` stored uncompressed; the build fails clearly if `model/` is missing | One source of truth; no duplicate 4.6 MB binary per model version |
+| D36 | 2026-11-23 | *Care-linking part superseded by D40.* **Supported plants = the model's 30 classes** (`model/classes.json`, excluding `other_plant`); `sync_plant_data.py` now reads `classes.json` + `care_tips.json`. Care values link **only on an exact scientific-name match** (6 of 30), so Bougainvillea (`spp.`) isn't linked to *B. glabra* | Plant list matches the model; no guessed care data |
+| D37 | 2026-11-23 | *"No percentages" part superseded by D43.* **"Not sure" mapping (resolves Q2; updates D17):** rule and values from `model_metadata.json`. Top answer `other_plant` → Unsupported (no names); below threshold → Uncertain with up to 3 guesses shown only as **"Possible matches (not confirmed)"**: no percentages, no care links, never styled as a result | Follows the ML team's guidance while keeping results honest |
+| D38 | 2026-11-23 | **LiteRT 1.4.2** (classic Interpreter API) | LiteRT 2.x is built with Kotlin 2.4 (project compiler 2.2.10); 1.x has no Kotlin metadata and no Guava/alpha dependencies |
+| D39 | 2026-11-23 | **Real model in every build; the demo identifier is only for device tests** (`AppContainer.useDemoIdentifier`, test-only), so demo banners and the picker no longer appear in the app | Users only see real results; tests stay deterministic |
+| D40 | 2026-11-23 | **Care data from the ML team's `model/care_tips.json`** (all 30 species, keyed by label), read **at runtime** together with `model/classes.json`. The generated `plants.json` and `sync_plant_data.py` were removed. Values are taken as given, including the ML team's genus-level choices (Bougainvillea uses *B. glabra*, peace lily *S. wallisii*, each with its note) | One source of truth, no sync step; complete care guides |
+| D41 | 2026-11-23 | **Pet safety is shown** (dogs and cats, from `care_tips.json`) with its details, **how it was established** (ASPCA list / university extension list / inferred from genus, not confirmed), its source, and "not veterinary advice; contact a vet" every time. Toxic plants use the warning style | Team approved the sources; the basis is shown so inferred entries aren't presented as confirmed |
+| D42 | 2026-11-23 | **Care guides show the source's light category** (e.g. "Bright Indirect") with lux as supporting detail (resolves Q12), a warning on converted (medium) or low-confidence values, the source's original wording for converted values, and a per-species source | Plain language and honest about precision |
+| D43 | 2026-11-23 | **Model confidence is shown as a percentage** (team request): the ML team's calibrated probability (temperature fitted on validation photos so "X%" means right about X% of the time on their data). Identified results show "Model confidence: 87%" plus a note that it was measured on the team's photos and yours can differ; possible matches show their %. Never "100%" or "0%" (shown as ">99%" / "<1%"). Saved results keep it (history schema 2, auto-migrated; older records show none). Raw, uncalibrated softmax is not shown | Gives users a sense of certainty without presenting it as accuracy or a guarantee |
+
+### Planned dependencies (added only in the sprint that needs them)
+
+| Sprint | Dependency | Purpose |
+|---|---|---|
+| 1 ✅ | navigation-compose 2.10.2, Kotlin serialization plugin (runtime comes transitively) | Navigation, type-safe routes |
+| 2 ✅ | lifecycle-viewmodel-compose / runtime-compose 2.11.1 | ViewModel state |
+| 2 ✅ | Coil 3.3.0 (coil-compose, no network module) | Downsampled, EXIF-aware image display (see D13) |
+| 2 ✅ | kotlinx-coroutines-test 1.10.2 (test only) | ViewModel tests |
+| 4 ✅ | kotlinx-serialization-json 1.9.0 (1.10+ needs Kotlin 2.3+) | Bundled plant/care data |
+| 5 ✅ | Room 2.8.5 + KSP 2.3.14 | Local history (D28) |
+| 7 | LiteRT (TensorFlow Lite) | On-device inference, after the model contract is agreed |
+
+## Open questions
+
+| # | Question | Notes | Owner | Needed by |
+|---|---|---|---|---|
+| Q9 | **Branding assets** | App icon/logo; currently template launcher icon | Team | Sprint 1–6 |
+| Q11 | **Research test protocol** | Separate model-accuracy evaluation from usability evaluation | Research lead + team | Sprint 8 |
+| Q13 | **Care data quality** | 10 species use values converted from published advice and one is low confidence. Review them before the usability study | Research lead | Sprint 8 |
+| Q14 | **Plant descriptions** | The source has no overview text, so results show none. Add only from a reviewed source (see D20 upgrade path) | Research lead | Optional |
+| Q15 | **Kotlin upgrade** | Compiler 2.2.10 pins Coil, serialization-json, Compose BOM and forces KSP 2.3.x (TEST_REPORT K2). Upgrading would lift the pins but is a larger change | Team | Before or after Sprint 7 |
+| Q16 | **Release signing** | Release build compiles but needs a signing key (kept out of git) before it can be installed and tested | Team | Sprint 8 |
+| Q18 | **Inference timeout** | Provisional 30 s (D18). Set it from `ModelInferenceTest` timings on the team's phones | App team | Sprint 8 |
+| Q19 | **Source terms** | Care and toxicity values from NC State Extension, Missouri Botanical Garden, UF/IFAS and the ASPCA are shown with attribution; check each site's terms of use before any distribution beyond the study | Research lead | Sprint 8 |

@@ -1,0 +1,208 @@
+<resources>
+    <string name="app_name">PlantID</string>
+
+    <!-- Shared components and actions -->
+    <string name="status_info">Information</string>
+    <string name="status_success">Success</string>
+    <string name="status_warning">Warning</string>
+    <string name="status_error">Error</string>
+    <string name="action_try_again">Try again</string>
+    <string name="action_back">Back</string>
+    <string name="action_ok">OK</string>
+    <string name="action_identify_plant">Identify a plant</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_history">History</string>
+    <string name="nav_about">About</string>
+
+    <!-- Home -->
+    <string name="home_tagline">Identify a plant from a photo and explore its care guide.</string>
+    <string name="home_demo_title">Demo mode</string>
+    <string name="home_demo_message">Real plant identification isn\'t connected yet. Results come from a demo and don\'t describe your plant.</string>
+    <string name="home_recent_title">Recent identifications</string>
+    <string name="action_view_all">View all</string>
+    <string name="home_scope_title">Selected plants only</string>
+    <string name="home_scope_message">PlantID works with a selected set of plants common in homes and gardens. It can\'t identify every plant.</string>
+    <string name="home_view_history">View history</string>
+
+    <!-- Photo source chooser -->
+    <string name="photo_source_title">Add a plant photo</string>
+    <string name="photo_source_camera">Take a photo</string>
+    <string name="photo_source_camera_detail">Use your camera</string>
+    <string name="photo_source_camera_missing">This device doesn\'t have a camera</string>
+    <string name="photo_source_gallery">Choose from photos</string>
+    <string name="photo_source_gallery_detail">Pick a photo you already have</string>
+    <string name="photo_preparing">Preparing your photo…</string>
+
+    <!-- Photo errors: plain language, no technical details -->
+    <string name="photo_error_open_title">Can\'t open this photo</string>
+    <string name="photo_error_open_message">It may be damaged or in a format PlantID doesn\'t support. Try a different photo.</string>
+    <string name="photo_error_camera_title">Camera not available</string>
+    <string name="photo_error_camera_message">No camera app could be opened. You can choose a photo you already have instead.</string>
+    <string name="photo_error_picker_title">Photos not available</string>
+    <string name="photo_error_picker_message">Your photos couldn\'t be opened on this device. Try taking a photo instead.</string>
+    <string name="photo_error_prepare_title">Something went wrong</string>
+    <string name="photo_error_prepare_message">PlantID couldn\'t get ready for a new photo. Please try again.</string>
+
+    <!-- Photo preview -->
+    <string name="preview_title">Check your photo</string>
+    <string name="preview_image_description">Your selected plant photo</string>
+    <string name="preview_image_error">We couldn\'t show this photo. It may no longer be available. Choose another photo to continue.</string>
+    <string name="preview_instruction">Make sure the plant is clearly visible.</string>
+    <string name="preview_tips_title">Tips for a good photo</string>
+    <string name="preview_tip_focus">Keep the plant in focus.</string>
+    <string name="preview_tip_leaves">Show the leaves or flowers clearly.</string>
+    <string name="preview_tip_light">Avoid very dark photos.</string>
+    <string name="preview_tip_single">Keep one main plant in the photo.</string>
+    <string name="preview_identify">Identify plant</string>
+    <string name="preview_choose_another">Choose another photo</string>
+
+    <!-- Demo mode (shown only while the mock identifier is in use) -->
+    <string name="demo_mode_title">Demo mode</string>
+    <string name="demo_mode_message">Real plant identification isn\'t connected yet. Choose which demo outcome PlantID should show.</string>
+    <string name="demo_scenario_identified">Plant identified</string>
+    <string name="demo_scenario_missing_details">Identified, some details missing</string>
+    <string name="demo_scenario_uncertain">Not confident</string>
+    <string name="demo_scenario_unsupported">No supported plant</string>
+    <string name="demo_scenario_failure">Something goes wrong</string>
+    <string name="demo_scenario_slow">Plant identified (slow)</string>
+    <string name="demo_banner_title">Demo result</string>
+    <string name="demo_banner_message">This comes from PlantID\'s demo mode, not from a plant-identification model. It doesn\'t describe your plant.</string>
+
+    <!-- Identifying and results -->
+    <string name="identifying_title">Identifying</string>
+    <string name="identifying_message">Analyzing your plant…</string>
+    <string name="result_title">Result</string>
+    <string name="result_photo_description">Your plant photo</string>
+    <string name="photo_unavailable_short">Photo no longer available</string>
+    <string name="result_identified_title">Match found</string>
+    <string name="result_identified_message">PlantID matched your photo to one of its supported plants. Results can be wrong, so compare it with your plant.</string>
+    <string name="result_name_fallback">Supported plant</string>
+    <string name="result_description_title">About this plant</string>
+    <string name="result_uncertain_title">We couldn\'t confidently identify this plant</string>
+    <string name="result_uncertain_message">Try another photo with the leaves clearly visible and good lighting.</string>
+    <string name="result_confidence">Model confidence: %1$s</string>
+    <string name="result_confidence_note">The model\'s calibrated estimate, measured on the team\'s test photos. Your photos can differ, so compare it with your plant.</string>
+    <string name="result_candidate_with_confidence">%1$s — %2$s</string>
+    <string name="result_candidates_title">Possible matches (not confirmed)</string>
+    <string name="result_candidates_note">PlantID isn\'t sure. These are its closest guesses. Compare them with your plant before relying on any of them.</string>
+    <string name="result_unsupported_title">No supported plant found</string>
+    <string name="result_unsupported_message">This photo didn\'t match any of the plants PlantID supports. It may be a different plant, or the plant may not be clear in the photo.</string>
+    <string name="result_failed_title">We couldn\'t analyze this photo</string>
+    <string name="result_failed_processing">Something went wrong while analyzing your photo. Please try again.</string>
+    <string name="result_failed_timed_out">Analyzing your photo took too long. Please try again.</string>
+    <string name="result_failed_model">Plant identification isn\'t available right now. Please try again.</string>
+    <string name="result_failed_photo">Your photo is no longer available. Choose another photo to continue.</string>
+    <string name="action_view_care_guide">View care guide</string>
+    <string name="action_identify_another">Identify another plant</string>
+    <string name="action_try_another_photo">Try another photo</string>
+    <string name="action_back_to_home">Back to home</string>
+
+    <!-- Care guide. Reviewed templates filled only with source values (DECISIONS D20).
+         Never add advice here that isn't backed by the source data. -->
+    <string name="care_title">Care guide</string>
+    <string name="care_loading">Loading care guide…</string>
+    <string name="care_family">Plant family: %1$s</string>
+    <string name="care_general_title">General guidance</string>
+    <string name="care_general_message">These values come from the source below. Your plant\'s needs vary with light, warmth and pot size, and following them can\'t guarantee a healthy plant.</string>
+    <string name="care_light_title">Light</string>
+    <string name="care_light_range">%1$s–%2$s lux</string>
+    <string name="care_light_single">About %1$s lux</string>
+    <string name="care_light_note">Lux measures how bright the light is where the plant sits.</string>
+    <string name="care_watering_title">Watering</string>
+    <plurals name="care_watering_interval">
+        <item quantity="one">About every %d day</item>
+        <item quantity="other">About every %d days</item>
+    </plurals>
+    <string name="care_watering_note">This is the typical interval in the source, not a fixed schedule. How often your plant needs water varies with its conditions.</string>
+    <string name="care_temperature_title">Temperature</string>
+    <string name="care_temperature_range">%1$d–%2$d °C</string>
+    <string name="care_temperature_single">About %1$d °C</string>
+    <string name="care_temperature_note">Temperature range listed for this plant in the source.</string>
+    <string name="care_humidity_title">Humidity</string>
+    <string name="care_humidity_value">Around %1$d%%</string>
+    <string name="care_humidity_note">Ideal relative humidity listed for this plant in the source.</string>
+    <string name="care_light_measured">Measured range: %1$s.</string>
+    <string name="care_confidence_medium_title">Converted from gardening advice</string>
+    <string name="care_confidence_medium_message">The main care dataset doesn\'t cover this plant, so these values were converted from the published advice shown below. Treat them as approximate.</string>
+    <string name="care_confidence_low_title">Lower-confidence values</string>
+    <string name="care_confidence_low_message">The source is less certain about these values. Treat them as approximate.</string>
+    <string name="care_note_title">Note from the PlantID team</string>
+    <string name="care_source_said_title">What the source says</string>
+    <string name="care_pet_title">Pet safety</string>
+    <string name="care_pet_summary_both">Toxic to dogs and cats</string>
+    <string name="care_pet_summary_none">Not toxic to dogs or cats</string>
+    <string name="care_pet_summary_dogs">Toxic to dogs, not to cats</string>
+    <string name="care_pet_summary_cats">Toxic to cats, not to dogs</string>
+    <string name="care_pet_basis_aspca">Checked against the ASPCA list of toxic and non-toxic plants.</string>
+    <string name="care_pet_basis_extension">Not in the ASPCA list. A university extension source lists a poison risk, so it\'s marked as toxic.</string>
+    <string name="care_pet_basis_genus">Inferred from related plants in the same genus. Not confirmed for this species.</string>
+    <string name="care_pet_basis_unknown">How this was established isn\'t recorded.</string>
+    <string name="care_pet_disclaimer">This isn\'t veterinary advice. If a pet eats part of a plant, contact a vet or an animal poison control service.</string>
+    <string name="care_pet_source">Source: %1$s</string>
+    <string name="care_source_title">Source</string>
+    <string name="care_source_with_license">%1$s. License: %2$s.</string>
+    <string name="care_none_title">No care guide available</string>
+    <string name="care_none_message">PlantID doesn\'t have care information for this plant yet.</string>
+    <string name="care_error_title">Care guide unavailable</string>
+    <string name="care_error_message">The care information couldn\'t be loaded. Please try again.</string>
+
+    <!-- History -->
+    <string name="history_title">History</string>
+    <string name="history_empty_title">No identifications yet</string>
+    <string name="history_empty_message">Your identified plants will appear here. Start by identifying your first plant.</string>
+    <string name="history_loading">Loading history…</string>
+    <string name="history_unidentified">Unidentified plant</string>
+    <string name="history_status_identified">Identified</string>
+    <string name="history_status_uncertain">Not confident</string>
+    <string name="history_status_unsupported">No supported plant</string>
+    <string name="history_demo_tag">Demo</string>
+    <string name="history_load_error_title">History unavailable</string>
+    <string name="history_load_error_message">Your saved identifications couldn\'t be loaded. Please try again.</string>
+    <string name="history_clear_all">Clear history</string>
+    <string name="history_clear_title">Clear all history?</string>
+    <plurals name="history_clear_message">
+        <item quantity="one">This deletes %d saved identification and its photo from this device. This can\'t be undone.</item>
+        <item quantity="other">This deletes %d saved identifications and their photos from this device. This can\'t be undone.</item>
+    </plurals>
+    <string name="action_clear_all">Clear all</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_delete">Delete</string>
+    <string name="history_error_title">Something went wrong</string>
+    <string name="history_clear_failed">History couldn\'t be cleared. Please try again.</string>
+    <string name="history_delete_failed">This result couldn\'t be deleted. Please try again.</string>
+    <string name="history_detail_title">Saved result</string>
+    <string name="history_identified_on">Identified on %1$s</string>
+    <string name="action_delete_from_history">Delete from history</string>
+    <string name="history_delete_title">Delete this result?</string>
+    <string name="history_delete_message">This deletes the saved result and its photo from this device. This can\'t be undone.</string>
+    <string name="history_not_found_title">Result not found</string>
+    <string name="history_not_found_message">It may have been deleted.</string>
+
+    <!-- Saving a result -->
+    <string name="action_save_to_history">Save to history</string>
+    <string name="history_saving">Saving…</string>
+    <string name="history_saved_title">Saved to history</string>
+    <string name="history_saved_message">You can find this result in History.</string>
+    <string name="history_save_failed_title">Couldn\'t save this result</string>
+    <string name="history_save_failed_message">Please try again.</string>
+
+    <!-- About. Keep the privacy text in line with what the app actually does (DECISIONS D11). -->
+    <string name="about_title">About</string>
+    <string name="about_purpose_title">What PlantID does</string>
+    <string name="about_purpose_body">PlantID helps you identify selected plants common in homes and gardens from a photo and explore their care guide.</string>
+    <string name="about_prototype_title">Research prototype</string>
+    <string name="about_prototype_body">PlantID is being built for an academic research project. It supports a limited set of plants, and its results are not a guarantee.</string>
+    <string name="about_supported_title">Supported plants</string>
+    <plurals name="about_supported_intro">
+        <item quantity="one">PlantID can identify %d plant. It can\'t identify other plants.</item>
+        <item quantity="other">PlantID can identify these %d plants. It can\'t identify other plants.</item>
+    </plurals>
+    <string name="about_supported_unavailable">The list of supported plants couldn\'t be loaded.</string>
+    <string name="about_sources_title">Care information</string>
+    <string name="about_sources_body">Care guides and pet safety come from: %1$s. Pet safety isn\'t veterinary advice.</string>
+    <string name="about_privacy_title">Privacy</string>
+    <string name="about_privacy_body">PlantID does not need an account and does not use the internet. When you take or choose a photo, PlantID keeps a temporary copy on this device so it can show it to you; only the most recent one is kept. If you save a result, it stays in History on this device, with a smaller copy of the photo without location data, until you delete it. Nothing is uploaded, and PlantID\'s data is left out of device backups. Photos you take in PlantID are not added to your gallery.</string>
+    <string name="about_version">Version %1$s</string>
+</resources>

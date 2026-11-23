@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Only the camera-capture directory is shareable through the FileProvider.
+     The path must match CachePhotoStore.DIRECTORY_NAME. -->
+<paths>
+    <cache-path
+        name="selected_photos"
+        path="selected_photos/" />
+</paths>
