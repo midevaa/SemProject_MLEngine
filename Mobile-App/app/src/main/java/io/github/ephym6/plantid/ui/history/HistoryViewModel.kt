@@ -7,6 +7,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import io.github.ephym6.plantid.domain.history.HistoryRecord
 import io.github.ephym6.plantid.domain.history.HistoryRepository
+import io.github.ephym6.plantid.domain.history.ResultsExporter
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -20,7 +21,10 @@ import kotlinx.coroutines.launch
 
 /** The History list: all saved identifications, newest first, plus Clear all. */
 @OptIn(ExperimentalCoroutinesApi::class)
-class HistoryViewModel(private val history: HistoryRepository) : ViewModel() {
+class HistoryViewModel(
+    private val history: HistoryRepository,
+    private val exporter: ResultsExporter,
+) : ViewModel() {
 
     sealed interface UiState {
         data object Loading : UiState
@@ -59,10 +63,48 @@ class HistoryViewModel(private val history: HistoryRepository) : ViewModel() {
         _clearFailed.value = false
     }
 
+    private val _exportUri = MutableStateFlow<String?>(null)
+
+    /** Set when an export file is ready to share; the screen opens the share sheet, then calls [onExportHandled]. */
+    val exportUri: StateFlow<String?> = _exportUri.asStateFlow()
+
+    private val _exportFailed = MutableStateFlow(false)
+    val exportFailed: StateFlow<Boolean> = _exportFailed.asStateFlow()
+
+    private var exporting = false
+
+    /** Exports every saved result as CSV (D45). Call only after the user confirmed. Repeated taps export once. */
+    fun export() {
+        val records = (uiState.value as? UiState.Records)?.records ?: return
+        if (exporting) return
+        exporting = true
+        viewModelScope.launch {
+            exporter.export(records).fold(
+                onSuccess = { _exportUri.value = it },
+                onFailure = { _exportFailed.value = true },
+            )
+            exporting = false
+        }
+    }
+
+    fun onExportHandled() {
+        _exportUri.value = null
+    }
+
+    /** The share sheet couldn't be opened, or the file couldn't be written. */
+    fun onExportFailed() {
+        _exportUri.value = null
+        _exportFailed.value = true
+    }
+
+    fun dismissExportError() {
+        _exportFailed.value = false
+    }
+
     companion object {
         private const val STOP_TIMEOUT_MILLIS = 5_000L
 
-        fun factory(history: HistoryRepository): ViewModelProvider.Factory =
-            viewModelFactory { initializer { HistoryViewModel(history) } }
+        fun factory(history: HistoryRepository, exporter: ResultsExporter): ViewModelProvider.Factory =
+            viewModelFactory { initializer { HistoryViewModel(history, exporter) } }
     }
 }

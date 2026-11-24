@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Only the camera-capture directory is shareable through the FileProvider.
-     The path must match CachePhotoStore.DIRECTORY_NAME. -->
+<!-- Directories shareable through the FileProvider, and nothing else:
+     - selected_photos/: the camera app writes a new photo here (CachePhotoStore.DIRECTORY_NAME);
+     - exports/: a results CSV the user chose to share (CsvResultsExporter.DIRECTORY_NAME). -->
 <paths>
     <cache-path
         name="selected_photos"
         path="selected_photos/" />
+    <cache-path
+        name="exports"
+        path="exports/" />
 </paths>

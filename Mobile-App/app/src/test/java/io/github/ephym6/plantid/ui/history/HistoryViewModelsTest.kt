@@ -2,6 +2,7 @@ package io.github.ephym6.plantid.ui.history
 
 import io.github.ephym6.plantid.domain.history.HistoryRecord
 import io.github.ephym6.plantid.domain.history.HistoryStatus
+import io.github.ephym6.plantid.domain.history.ResultsExporter
 import io.github.ephym6.plantid.domain.identification.ModelInfo
 import io.github.ephym6.plantid.testing.FakeHistoryRepository
 import io.github.ephym6.plantid.ui.home.HomeViewModel
@@ -30,6 +31,17 @@ class HistoryViewModelsTest {
 
     private val dispatcher = StandardTestDispatcher()
     private val history = FakeHistoryRepository()
+
+    private class FakeExporter : ResultsExporter {
+        var result: Result<String> = Result.success("content://test.fileprovider/exports/results.csv")
+        val exported = mutableListOf<List<HistoryRecord>>()
+        override suspend fun export(records: List<HistoryRecord>): Result<String> {
+            exported += records
+            return result
+        }
+    }
+
+    private val exporter = FakeExporter()
     private val model = ModelInfo("Demo", null, isDemo = true)
 
     private fun record(id: String, minute: Long = 0) = HistoryRecord(
@@ -59,7 +71,7 @@ class HistoryViewModelsTest {
 
     @Test
     fun `history list shows empty, then records`() = runTest(dispatcher) {
-        val viewModel = HistoryViewModel(history)
+        val viewModel = HistoryViewModel(history, exporter)
         keepCollecting(viewModel.uiState)
         assertEquals(HistoryViewModel.UiState.Loading, viewModel.uiState.value)
         advanceUntilIdle()
@@ -73,7 +85,7 @@ class HistoryViewModelsTest {
     @Test
     fun `history read error is shown and can be retried`() = runTest(dispatcher) {
         history.failReads = true
-        val viewModel = HistoryViewModel(history)
+        val viewModel = HistoryViewModel(history, exporter)
         keepCollecting(viewModel.uiState)
         advanceUntilIdle()
         assertEquals(HistoryViewModel.UiState.Error, viewModel.uiState.value)
@@ -88,7 +100,7 @@ class HistoryViewModelsTest {
     @Test
     fun `clear all empties history, and a failure is reported`() = runTest(dispatcher) {
         history.records.value = listOf(record("a"), record("b"))
-        val viewModel = HistoryViewModel(history)
+        val viewModel = HistoryViewModel(history, exporter)
         keepCollecting(viewModel.uiState)
 
         history.failClear = true
@@ -169,5 +181,53 @@ class HistoryViewModelsTest {
         advanceUntilIdle()
 
         assertEquals(emptyList<HistoryRecord>(), viewModel.recent.value)
+    }
+
+    // ---- Export (D45) ----
+
+    @Test
+    fun `export shares every saved result once`() = runTest(dispatcher) {
+        history.records.value = listOf(record("a"), record("b"))
+        val viewModel = HistoryViewModel(history, exporter)
+        keepCollecting(viewModel.uiState)
+        advanceUntilIdle()
+
+        viewModel.export()
+        viewModel.export() // repeated tap
+        advanceUntilIdle()
+
+        assertEquals(listOf(listOf(record("a"), record("b"))), exporter.exported)
+        assertEquals("content://test.fileprovider/exports/results.csv", viewModel.exportUri.value)
+        viewModel.onExportHandled()
+        assertNull(viewModel.exportUri.value)
+    }
+
+    @Test
+    fun `nothing to export when history is empty`() = runTest(dispatcher) {
+        val viewModel = HistoryViewModel(history, exporter)
+        keepCollecting(viewModel.uiState)
+        advanceUntilIdle()
+
+        viewModel.export()
+        advanceUntilIdle()
+
+        assertTrue(exporter.exported.isEmpty())
+    }
+
+    @Test
+    fun `a failed export is reported`() = runTest(dispatcher) {
+        history.records.value = listOf(record("a"))
+        exporter.result = Result.failure(java.io.IOException("disk full"))
+        val viewModel = HistoryViewModel(history, exporter)
+        keepCollecting(viewModel.uiState)
+        advanceUntilIdle()
+
+        viewModel.export()
+        advanceUntilIdle()
+
+        assertTrue(viewModel.exportFailed.value)
+        assertNull(viewModel.exportUri.value)
+        viewModel.dismissExportError()
+        assertFalse(viewModel.exportFailed.value)
     }
 }

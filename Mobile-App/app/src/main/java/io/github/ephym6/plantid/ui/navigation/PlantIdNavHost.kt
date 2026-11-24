@@ -1,10 +1,16 @@
 package io.github.ephym6.plantid.ui.navigation
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -18,6 +24,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import io.github.ephym6.plantid.BuildConfig
+import io.github.ephym6.plantid.R
 import io.github.ephym6.plantid.di.AppContainer
 import io.github.ephym6.plantid.domain.plant.PlantCatalog
 import io.github.ephym6.plantid.ui.about.AboutScreen
@@ -64,9 +71,28 @@ fun PlantIdNavHost(
             )
         }
         composable<HistoryRoute> { entry ->
-            val viewModel: HistoryViewModel = viewModel(factory = HistoryViewModel.factory(container.historyRepository))
+            val viewModel: HistoryViewModel = viewModel(
+                factory = HistoryViewModel.factory(container.historyRepository, container.resultsExporter),
+            )
             val state by viewModel.uiState.collectAsStateWithLifecycle()
             val clearFailed by viewModel.clearFailed.collectAsStateWithLifecycle()
+            val exportUri by viewModel.exportUri.collectAsStateWithLifecycle()
+            val exportFailed by viewModel.exportFailed.collectAsStateWithLifecycle()
+            val context = LocalContext.current
+            val shareTitle = stringResource(R.string.history_export_share_title)
+            LaunchedEffect(exportUri) {
+                val uri = exportUri ?: return@LaunchedEffect
+                val send = Intent(Intent.ACTION_SEND)
+                    .setType("text/csv")
+                    .putExtra(Intent.EXTRA_STREAM, uri.toUri())
+                    .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                try {
+                    context.startActivity(Intent.createChooser(send, shareTitle))
+                    viewModel.onExportHandled()
+                } catch (_: ActivityNotFoundException) {
+                    viewModel.onExportFailed()
+                }
+            }
             HistoryScreen(
                 state = state,
                 clearFailed = clearFailed,
@@ -75,6 +101,9 @@ fun PlantIdNavHost(
                 onClearAll = viewModel::clearAll,
                 onDismissClearError = viewModel::dismissClearError,
                 onRetry = viewModel::retry,
+                exportFailed = exportFailed,
+                onExport = viewModel::export,
+                onDismissExportError = viewModel::dismissExportError,
             )
         }
         composable<HistoryDetailRoute> { entry ->

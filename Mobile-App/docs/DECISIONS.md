@@ -50,6 +50,11 @@ If a decision changes, mark the old one *superseded* and add a new entry.
 | D41 | 2026-11-23 | **Pet safety is shown** (dogs and cats, from `care_tips.json`) with its details, **how it was established** (ASPCA list / university extension list / inferred from genus, not confirmed), its source, and "not veterinary advice; contact a vet" every time. Toxic plants use the warning style | Team approved the sources; the basis is shown so inferred entries aren't presented as confirmed |
 | D42 | 2026-11-23 | **Care guides show the source's light category** (e.g. "Bright Indirect") with lux as supporting detail (resolves Q12), a warning on converted (medium) or low-confidence values, the source's original wording for converted values, and a per-species source | Plain language and honest about precision |
 | D43 | 2026-11-23 | **Model confidence is shown as a percentage** (team request): the ML team's calibrated probability (temperature fitted on validation photos so "X%" means right about X% of the time on their data). Identified results show "Model confidence: 87%" plus a note that it was measured on the team's photos and yours can differ; possible matches show their %. Never "100%" or "0%" (shown as ">99%" / "<1%"). Saved results keep it (history schema 2, auto-migrated; older records show none). Raw, uncalibrated softmax is not shown | Gives users a sense of certainty without presenting it as accuracy or a guarantee |
+| D44 | 2026-11-23 | **Release signing (was Q16):** the release build is signed from a local, git-ignored `Mobile-App/keystore.properties` and key file; without them it builds unsigned. Study builds are signed release APKs; `bundleRelease` makes an App Bundle for any store upload (`docs/RELEASE.md`) | Keys and passwords never in git; testers get the optimised build |
+| D45 | 2026-11-23 | **Results export for the evaluation:** History → *Export results (CSV)*, behind a confirmation: one row per saved result (time in UTC, outcome, predicted label, names, confidence, model, demo flag) plus blank `true_label`/`notes` columns; **no photos**; shared only through the Android share sheet when the user chooses. About privacy text updated | Accuracy measurements traceable to actual tests (spec Sprint 8) without sending anything automatically |
+| D46 | 2026-11-23 | **Launcher icon (was Q9):** adaptive icon from the app's leaf symbol (Material Symbols "eco") in PlantID green on the light green container colour, with a monochrome layer for themed icons; template bitmaps removed (minSdk 26 uses adaptive icons) | Consistent branding; no new assets needed |
+| D47 | 2026-11-23 | **Identification timeout stays 30 s** until `ModelInferenceTest` timings are recorded (Q18) | Don't invent a number |
+| D48 | 2026-11-24 | **Identification timeout confirmed at 30 s (was Q18):** measured on a team phone (2412DPC0AG, Android 16): first identification incl. model load 8763 ms, warm 5462, 8392 and 2624 ms (TEST_REPORT §6). 30 s is about 3.4× the slowest measured time | Long enough for slow runs; still ends a stuck run. One phone, one run: re-check on other phones |
 
 ### Planned dependencies (added only in the sprint that needs them)
 
@@ -67,11 +72,8 @@ If a decision changes, mark the old one *superseded* and add a new entry.
 
 | # | Question | Notes | Owner | Needed by |
 |---|---|---|---|---|
-| Q9 | **Branding assets** | App icon/logo; currently template launcher icon | Team | Sprint 1–6 |
-| Q11 | **Research test protocol** | Separate model-accuracy evaluation from usability evaluation | Research lead + team | Sprint 8 |
+| Q11 | **Research test protocol** | Draft in `docs/EVALUATION_PROTOCOL.md` (model accuracy and usability kept separate). Approve or change it: photo counts, participants, consent, questionnaire | Research lead | Before the study |
 | Q13 | **Care data quality** | 10 species use values converted from published advice and one is low confidence. Review them before the usability study | Research lead | Sprint 8 |
 | Q14 | **Plant descriptions** | The source has no overview text, so results show none. Add only from a reviewed source (see D20 upgrade path) | Research lead | Optional |
 | Q15 | **Kotlin upgrade** | Compiler 2.2.10 pins Coil, serialization-json, Compose BOM and forces KSP 2.3.x (TEST_REPORT K2). Upgrading would lift the pins but is a larger change | Team | Before or after Sprint 7 |
-| Q16 | **Release signing** | Release build compiles but needs a signing key (kept out of git) before it can be installed and tested | Team | Sprint 8 |
-| Q18 | **Inference timeout** | Provisional 30 s (D18). Set it from `ModelInferenceTest` timings on the team's phones | App team | Sprint 8 |
 | Q19 | **Source terms** | Care and toxicity values from NC State Extension, Missouri Botanical Garden, UF/IFAS and the ASPCA are shown with attribution; check each site's terms of use before any distribution beyond the study | Research lead | Sprint 8 |

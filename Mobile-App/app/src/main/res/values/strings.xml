@@ -161,6 +161,15 @@
     <string name="history_load_error_title">History unavailable</string>
     <string name="history_load_error_message">Your saved identifications couldn\'t be loaded. Please try again.</string>
     <string name="history_clear_all">Clear history</string>
+    <string name="history_export">Export results (CSV)</string>
+    <string name="history_export_title">Export saved results?</string>
+    <plurals name="history_export_message">
+        <item quantity="one">PlantID creates a CSV file with %d saved result: date, outcome, plant name, confidence and model version. No photos. You choose where to send it; nothing is sent automatically.</item>
+        <item quantity="other">PlantID creates a CSV file with %d saved results: date, outcome, plant name, confidence and model version. No photos. You choose where to send it; nothing is sent automatically.</item>
+    </plurals>
+    <string name="action_export">Export</string>
+    <string name="history_export_share_title">Share PlantID results</string>
+    <string name="history_export_failed">The results couldn\'t be exported. Please try again.</string>
     <string name="history_clear_title">Clear all history?</string>
     <plurals name="history_clear_message">
         <item quantity="one">This deletes %d saved identification and its photo from this device. This can\'t be undone.</item>
@@ -203,6 +212,6 @@
     <string name="about_sources_title">Care information</string>
     <string name="about_sources_body">Care guides and pet safety come from: %1$s. Pet safety isn\'t veterinary advice.</string>
     <string name="about_privacy_title">Privacy</string>
-    <string name="about_privacy_body">PlantID does not need an account and does not use the internet. When you take or choose a photo, PlantID keeps a temporary copy on this device so it can show it to you; only the most recent one is kept. If you save a result, it stays in History on this device, with a smaller copy of the photo without location data, until you delete it. Nothing is uploaded, and PlantID\'s data is left out of device backups. Photos you take in PlantID are not added to your gallery.</string>
+    <string name="about_privacy_body">PlantID does not need an account and does not use the internet. When you take or choose a photo, PlantID keeps a temporary copy on this device so it can show it to you; only the most recent one is kept. If you save a result, it stays in History on this device, with a smaller copy of the photo without location data, until you delete it. Nothing is uploaded, and PlantID\'s data is left out of device backups. If you export your saved results, PlantID creates a CSV file without photos and you choose where to send it. Photos you take in PlantID are not added to your gallery.</string>
     <string name="about_version">Version %1$s</string>
 </resources>

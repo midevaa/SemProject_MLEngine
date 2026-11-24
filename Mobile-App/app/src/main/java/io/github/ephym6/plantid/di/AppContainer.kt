@@ -2,6 +2,7 @@ package io.github.ephym6.plantid.di
 
 import android.content.Context
 import androidx.annotation.VisibleForTesting
+import io.github.ephym6.plantid.data.history.CsvResultsExporter
 import io.github.ephym6.plantid.data.history.HistoryPhotoStore
 import io.github.ephym6.plantid.data.history.PlantIdDatabase
 import io.github.ephym6.plantid.data.history.RoomHistoryRepository
@@ -12,6 +13,7 @@ import io.github.ephym6.plantid.data.image.CachePhotoStore
 import io.github.ephym6.plantid.data.image.PhotoStore
 import io.github.ephym6.plantid.data.plant.AssetPlantRepository
 import io.github.ephym6.plantid.domain.history.HistoryRepository
+import io.github.ephym6.plantid.domain.history.ResultsExporter
 import io.github.ephym6.plantid.domain.identification.IdentificationService
 import io.github.ephym6.plantid.domain.plant.PlantRepository
 
@@ -32,6 +34,8 @@ class AppContainer(context: Context) {
     val historyRepository: HistoryRepository by lazy {
         RoomHistoryRepository(database.historyDao(), HistoryPhotoStore(appContext))
     }
+
+    val resultsExporter: ResultsExporter by lazy { CsvResultsExporter(appContext) }
 
     /** The real on-device model (Sprint 7). Used in every build. */
     private val modelIdentification by lazy { ModelIdentificationService(appContext, plantRepository) }

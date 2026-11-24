@@ -5,10 +5,11 @@ plant, see the identification result, read its care guide, and revisit past
 identifications. All processing is meant to happen on the device, and the app
 does not need an account.
 
-> **Current status: Sprint 7 (model integration).** Identification runs the
-> ML team's **PlantID v1** model on the device (30 species, plus "not sure" and
-> "no supported plant" answers), with a care guide and pet safety for every
-> species, saved history and no internet use. See `docs/AI_INTEGRATION.md`.
+> **Current status: Sprint 8 (release and evaluation).** Research prototype:
+> the ML team's **PlantID v1** model runs on the phone (30 species, plus "not
+> sure" and "no supported plant"), with care guides and pet safety for every
+> species, model confidence, saved history and a CSV export for the evaluation.
+> No account and no internet. Build a signed release with `docs/RELEASE.md`.
 
 ## Requirements
 
@@ -145,7 +146,27 @@ a temporary private copy; nothing is uploaded. See `docs/DECISIONS.md` D12.
   open questions with owners.
 - [`docs/MANUAL_TESTS.md`](docs/MANUAL_TESTS.md): on-device checks for flows
   automated tests can't drive (photo picker, camera).
-- [`docs/TEST_REPORT.md`](docs/TEST_REPORT.md): Sprint 6 test results, fixes and
-  known issues.
+- [`docs/TEST_REPORT.md`](docs/TEST_REPORT.md): test results, fixes and known
+  issues.
+- [`docs/RELEASE.md`](docs/RELEASE.md): signing, building and installing the
+  release, and the pre-release privacy review.
+- [`docs/EVALUATION_PROTOCOL.md`](docs/EVALUATION_PROTOCOL.md): draft protocol
+  for the model-accuracy and usability evaluations (research lead to approve).
+- [`docs/DEMO_CHECKLIST.md`](docs/DEMO_CHECKLIST.md): presentation preparation,
+  flow and talking points.
 - [`docs/AI_INTEGRATION.md`](docs/AI_INTEGRATION.md): how the trained model is
   integrated, its decision rule, and how to update it.
+
+## Known limitations
+
+- Identifies only the 30 supported species; other plants should come out as
+  "not sure" or "no supported plant", but not always.
+- Accuracy on new phone photos is lower than on the ML team's test set, and the
+  calibrated confidence can be over-confident on such photos.
+- Care values are general guidance: 20 species from the FloraDB sample, 10
+  converted from university extension advice (marked in the app).
+- Pet safety is not veterinary advice; 5 entries aren't ASPCA-verified
+  (marked).
+- Saved "not sure" results don't keep their possible matches.
+- Phones only, portrait first; tablets and landscape aren't optimised.
+- Full list: `docs/TEST_REPORT.md`.

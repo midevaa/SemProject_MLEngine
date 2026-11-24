@@ -52,8 +52,12 @@ fun HistoryScreen(
     onDismissClearError: () -> Unit,
     onRetry: () -> Unit,
     modifier: Modifier = Modifier,
+    exportFailed: Boolean = false,
+    onExport: () -> Unit = {},
+    onDismissExportError: () -> Unit = {},
 ) {
     var confirmClear by rememberSaveable { mutableStateOf(false) }
+    var confirmExport by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         modifier = modifier,
@@ -62,6 +66,12 @@ fun HistoryScreen(
                 title = stringResource(R.string.history_title),
                 actions = {
                     if (state is UiState.Records) {
+                        IconButton(onClick = { confirmExport = true }) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_share),
+                                contentDescription = stringResource(R.string.history_export),
+                            )
+                        }
                         IconButton(onClick = { confirmClear = true }) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_delete_sweep),
@@ -131,6 +141,35 @@ fun HistoryScreen(
             dismissButton = {
                 TextButton(onClick = { confirmClear = false }) { Text(stringResource(R.string.action_cancel)) }
             },
+        )
+    }
+
+    if (confirmExport && state is UiState.Records) {
+        AlertDialog(
+            onDismissRequest = { confirmExport = false },
+            icon = { Icon(painterResource(R.drawable.ic_share), contentDescription = null) },
+            title = { Text(stringResource(R.string.history_export_title)) },
+            text = {
+                Text(pluralStringResource(R.plurals.history_export_message, state.records.size, state.records.size))
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    confirmExport = false
+                    onExport()
+                }) { Text(stringResource(R.string.action_export)) }
+            },
+            dismissButton = {
+                TextButton(onClick = { confirmExport = false }) { Text(stringResource(R.string.action_cancel)) }
+            },
+        )
+    }
+
+    if (exportFailed) {
+        AlertDialog(
+            onDismissRequest = onDismissExportError,
+            title = { Text(stringResource(R.string.history_error_title)) },
+            text = { Text(stringResource(R.string.history_export_failed)) },
+            confirmButton = { TextButton(onClick = onDismissExportError) { Text(stringResource(R.string.action_ok)) } },
         )
     }
 

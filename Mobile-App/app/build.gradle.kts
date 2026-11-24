@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -10,6 +12,16 @@ check(modelDir.resolve("model_metadata.json").isFile) {
     "PlantID model files not found in ${modelDir.normalize()}. The app needs the ML team's " +
         "model/ folder at the repository root (see Mobile-App/docs/AI_INTEGRATION.md)."
 }
+
+// Release signing (DECISIONS D44). The key and its passwords live only on the
+// machine that builds releases, in Mobile-App/keystore.properties (git-ignored;
+// see docs/RELEASE.md). Without that file, release builds are simply unsigned.
+val keystoreProperties = Properties().apply {
+    val file = rootDir.resolve("keystore.properties")
+    if (file.isFile) file.inputStream().use { load(it) }
+}
+val hasReleaseKey = listOf("storeFile", "storePassword", "keyAlias", "keyPassword")
+    .all { !keystoreProperties.getProperty(it).isNullOrBlank() }
 
 android {
     namespace = "io.github.ephym6.plantid"
@@ -27,8 +39,20 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        if (hasReleaseKey) {
+            create("release") {
+                storeFile = rootDir.resolve(keystoreProperties.getProperty("storeFile"))
+                storePassword = keystoreProperties.getProperty("storePassword")
+                keyAlias = keystoreProperties.getProperty("keyAlias")
+                keyPassword = keystoreProperties.getProperty("keyPassword")
+            }
+        }
+    }
+
     buildTypes {
         release {
+            if (hasReleaseKey) signingConfig = signingConfigs.getByName("release")
             optimization {
                 enable = true
                 packageScope = setOf("androidx.**", "kotlin.**", "kotlinx.**")

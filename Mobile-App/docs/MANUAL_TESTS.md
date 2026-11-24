@@ -150,3 +150,21 @@ unless the research protocol says so.
 | 7.17 | Identified result | **Model confidence: N%** (N ≥ 72) with the note about the team's test photos; never 100% | |
 | 7.18 | "Not sure" result | Possible matches show a % each (all below 72%); no confidence line for the result itself | |
 | 7.19 | Save an identified result, open it from History | Same confidence shown; records saved before this update show none and still open | |
+
+## Sprint 8 — Release build and evaluation support
+
+Device: ____________  Android: ____  Build/commit + versionCode: ________  Tester: ____  Date: ________
+
+Run on the **signed release APK** (`RELEASE.md`), not the debug build.
+
+| # | Steps | Expected | Result |
+|---|---|---|---|
+| 8.1 | Install the release APK (uninstall the debug build first) | Installs; launcher shows the green leaf icon | |
+| 8.2 | Turn on themed icons (Android 13+: Wallpaper & style → Themed icons) | PlantID shows a monochrome leaf | |
+| 8.3 | Full walk: identify (camera and gallery), care guide, save, history, delete, About | Everything works as in the debug build (R8 didn't break anything) | |
+| 8.4 | Save a few results (identified, not sure, no supported plant) → History → **Export results (CSV)** | Confirmation explains what's shared (no photos); share sheet opens | |
+| 8.5 | Send the CSV to yourself (email or Drive) and open it in a spreadsheet | Header row + one row per saved result, oldest first; `true_label` and `notes` empty; confidence like `0.8700` | |
+| 8.6 | Export again | Works; nothing is sent without choosing a target | |
+| 8.7 | About → Privacy | Mentions the export and that it has no photos | |
+| 8.8 | `aapt2 dump permissions app-release.apk` | No permissions besides the AndroidX-internal signature permission | |
+| 8.9 | Airplane mode, full walk | Works offline (export needs a target app that works offline, e.g. Files) | |

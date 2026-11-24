@@ -40,6 +40,7 @@ class HistoryScreensTest {
     private val uncertain = HistoryRecord("b", Instant.EPOCH, HistoryStatus.Uncertain, null, null, null, null, demo, null)
 
     private var cleared = 0
+    private var exports = 0
     private var opened: String? = null
     private var deleted = 0
     private var careGuideFor: String? = null
@@ -55,6 +56,7 @@ class HistoryScreensTest {
                     onClearAll = { cleared++ },
                     onDismissClearError = {},
                     onRetry = {},
+                    onExport = { exports++ },
                 )
             }
         }
@@ -106,11 +108,29 @@ class HistoryScreensTest {
     }
 
     @Test
+    fun exportExplainsWhatIsSharedAndAsksFirst() {
+        showList(HistoryViewModel.UiState.Records(listOf(identified, uncertain)))
+
+        composeRule.onNodeWithContentDescription(str(R.string.history_export)).performClick()
+        composeRule.onNodeWithText(str(R.string.history_export_title)).assertIsDisplayed()
+        composeRule.onNodeWithText(
+            composeRule.activity.resources.getQuantityString(R.plurals.history_export_message, 2, 2),
+        ).assertIsDisplayed()
+        composeRule.onNodeWithText(str(R.string.action_cancel)).performClick()
+        assertEquals(0, exports)
+
+        composeRule.onNodeWithContentDescription(str(R.string.history_export)).performClick()
+        composeRule.onNodeWithText(str(R.string.action_export)).performClick()
+        assertEquals(1, exports)
+    }
+
+    @Test
     fun emptyHistoryHasNoClearButton() {
         showList(HistoryViewModel.UiState.Empty)
 
         composeRule.onNodeWithText(str(R.string.history_empty_title)).assertIsDisplayed()
         composeRule.onNodeWithContentDescription(str(R.string.history_clear_all)).assertDoesNotExist()
+        composeRule.onNodeWithContentDescription(str(R.string.history_export)).assertDoesNotExist()
     }
 
     @Test

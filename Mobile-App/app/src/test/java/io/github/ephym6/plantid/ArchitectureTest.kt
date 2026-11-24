@@ -22,6 +22,7 @@ class ArchitectureTest {
         "AssetPlantRepository",
         "RoomHistoryRepository",
         "PlantIdDatabase",
+        "CsvResultsExporter",
         "HistoryPhotoStore",
     )
 

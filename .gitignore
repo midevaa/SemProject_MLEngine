@@ -67,3 +67,10 @@ CLAUDE.md
 outputs/
 plantid_v1/
 *.zip
+
+# ==============================
+# Release signing (never commit keys or passwords)
+# ==============================
+keystore.properties
+*.jks
+*.keystore
