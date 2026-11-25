@@ -8,8 +8,10 @@ import java.io.File
  * The UI depends only on this interface, never on model-specific APIs.
  *
  * Implementations:
- * - `MockIdentificationService`: deterministic, clearly labelled demo outcomes (now).
- * - A real on-device model (Sprint 7), only after the model contract is agreed.
+ * - `ModelIdentificationService`: the ML team's PlantID model, run on the phone
+ *   with LiteRT. Used in every app build.
+ * - `MockIdentificationService`: deterministic, clearly labelled demo outcomes,
+ *   used only by device tests.
  *
  * Implementations must be main-safe: do image decoding, preprocessing and
  * inference off the main thread. They should return [IdentificationOutcome.Failed]
